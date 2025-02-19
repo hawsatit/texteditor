@@ -5,79 +5,62 @@ package edu.grinnell.csc207.texteditor;
  */
 public class GapBuffer {
 
-public static final int MAX_SIZE = 1000;
+public static final int INIT_SIZE = 10;
     
     private char[] BackingArray;
-    private int index;
+    private int gapStart;
+    private int gapEnd;
     private int size;
     
     /**
      * initializes GapBuffer
      */
     public GapBuffer(){
-        this.BackingArray = new char[MAX_SIZE];
+        this.BackingArray = new char[INIT_SIZE];
         this.size = 0;
-        this.index = 0;
+        this.gapStart = 0;
+        this.gapEnd = INIT_SIZE;
     }
     
     /**
      * @param ch 
-     * inserts character ch into the buffer at the cursor's current position, 
-     * advancing the cursor one position forward
+     * inserts character ch into the buffer at the gapStart and then increments
+     * gapStart
+     *
      */
     public void insert(char ch) {
         
-        if (this.index < 0 || this.index > this.BackingArray.length) {
-        throw new UnsupportedOperationException("Insertion index is out of bounds");
-        } else {
-            int numToShift = size - index;
-            char[] temp = new char[numToShift];
-            for (int i = 0; i < numToShift; i++) {
-                temp[i] = this.BackingArray[index + i];
-            }
-            
-            this.BackingArray[index] = ch;
-            
-            for (int i = 0; i < numToShift; i++) {
-                this.BackingArray[index + 1 + i] = temp[i];
-            }
-            
-            size++;
-            index++;
+        if (gapStart == gapEnd) {
+            expandBuffer();
         }
+        
+        BackingArray[gapStart] = ch;
+        gapStart++;
+        size++;
     }
     
     /**
-     * deletes the character at the cursor's current position, moving the cursor one position backwards. 
-     * Does nothing if there are no characters in the buffer.
+     * deletes the character before the cursor by decrementing gapStart
      * 
      */
     public void delete() {
-        if (this.index > 0 && this.size > 0){
-            for (int i = index - 1; i < size - 1; i++) {
-                this.BackingArray[i] = this.BackingArray[i + 1];
-            }
-            
-            BackingArray[size - 1] = '\0';
-                    
-            size--;
-            index--;
+        
+        if (gapStart == 0) {
+            throw new UnsupportedOperationException("No character to delete");
         } else {
-            throw new UnsupportedOperationException("nothing to delete");
+            gapStart--;
+            BackingArray[gapStart] = '\0';
+            size--;
         }
+        
     }
 
     /**
      * 
-     * @return returns the current index ie. the cursor position
+     * @return returns the current gapStart ie. the cursor position
      */
     public int getCursorPosition() {
-        
-        if (this.index < 0 || this.index > this.size) {
-        throw new UnsupportedOperationException("Invalid Index Position");
-        }
-        
-        return this.index; 
+        return gapStart; 
     }
     
     /**
@@ -85,12 +68,13 @@ public static final int MAX_SIZE = 1000;
      */
     public void moveLeft() {
         
-        //check if cursor is in a valid position and can move left
-        if ((this.index < 0 || this.index > this.size) && (this.index <= 0)) {
-        throw new UnsupportedOperationException("Unable to move left'");
-        } else {
-            this.index--;
+         if (gapStart == 0) {
+            throw new UnsupportedOperationException("Cursor is at the beginning");
         }
+
+        BackingArray[gapEnd - 1] = BackingArray[gapStart - 1];
+        gapStart--;
+        gapEnd--;
     }
 
     /**
@@ -98,12 +82,13 @@ public static final int MAX_SIZE = 1000;
      */
     public void moveRight() {
         
-        //check if cursor is in a valid position and can move right
-        if (this.index < 0 || this.index > this.size) {
-        throw new UnsupportedOperationException("Unable to move right");
-        } else {
-            this.index++;
+        if (gapEnd == BackingArray.length) {
+            throw new UnsupportedOperationException("Cursor is at the end");
         }
+
+        BackingArray[gapStart] = BackingArray[gapEnd];
+        gapStart++;
+        gapEnd++;
     }
 
     /**
@@ -128,13 +113,35 @@ public static final int MAX_SIZE = 1000;
             return this.BackingArray[i];
         }
     }
+    
+    private void expandBuffer() {
+        int newSize = BackingArray.length * 2;
+        char[] newBuffer = new char[newSize];
+        int newGapEnd = newSize - (BackingArray.length - gapEnd);
+
+        System.arraycopy(BackingArray, 0, newBuffer, 0, gapStart);
+
+        System.arraycopy(BackingArray, gapEnd, newBuffer, newGapEnd, BackingArray.length - gapEnd);
+
+        gapEnd = newGapEnd;
+        BackingArray = newBuffer;
+    }
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < size; i++) {
-            result.append(BackingArray[i]);
+        char[] resultArray = new char[size];
+        int index = 0;
+
+        // Copy before the gap
+        for (int i = 0; i < gapStart; i++) {
+            resultArray[index++] = BackingArray[i];
         }
-        return result.toString();
+
+        // Copy after the gap
+        for (int i = gapEnd; i < BackingArray.length; i++) {
+            resultArray[index++] = BackingArray[i];
+        }
+
+        return new String(resultArray);
     }
 }
