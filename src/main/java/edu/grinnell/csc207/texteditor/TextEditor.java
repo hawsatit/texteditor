@@ -1,5 +1,6 @@
 package edu.grinnell.csc207.texteditor;
 
+import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -26,15 +27,11 @@ public class TextEditor {
 
         for (int i = 0; i < size; i++) {
             char character = buf.getChar(i);
-            if (character == '\n') {
-                row++;
-                col = 0;
-            } else {
-                screen.setCharacter(row, col, new TextCharacter(character));
-                col++;
-            }
+            screen.setCharacter(col, row, new TextCharacter(character));
+            col++;
         }
-
+        
+        screen.setCursorPosition(new TerminalPosition(col, 0));
         screen.refresh();
     }
     
@@ -69,6 +66,7 @@ public class TextEditor {
             
             Screen screen = createScreen();
             screen.startScreen();
+            drawBuffer(buf, screen);
         
             boolean isRunning = true;
         
@@ -78,13 +76,19 @@ public class TextEditor {
                     buf.insert(stroke.getCharacter());
                     drawBuffer(buf, screen);
                 } else if (stroke.getKeyType() == KeyType.ArrowLeft){
-                   buf.moveLeft();
+                   if (buf.getCursorPosition() > 0){
+                       buf.moveLeft();
+                   }
                    drawBuffer(buf, screen);
                 } else if (stroke.getKeyType() == KeyType.ArrowRight){
-                   buf.moveRight();
+                   if (buf.getCursorPosition() < buf.getSize() - 1){
+                       buf.moveRight();
+                   }
                    drawBuffer(buf, screen);
                 } else if (stroke.getKeyType() == KeyType.Backspace){
-                    buf.delete();
+                    if (buf.getSize() > 0){
+                        buf.delete();
+                    }
                     drawBuffer(buf, screen);
                 } else if (stroke.getKeyType() == KeyType.Escape){
                     screen.stopScreen();
