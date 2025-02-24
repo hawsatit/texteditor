@@ -45,9 +45,7 @@ public class SimpleStringBuffer {
             String secondPart = this.BackingString.substring(this.index);
             this.BackingString = firstPart + secondPart;
             this.index--;
-        }else{
-            throw new UnsupportedOperationException("Unimplemented method 'delete'");   
-        } 
+        }
     }
 
     /**
@@ -55,11 +53,6 @@ public class SimpleStringBuffer {
      * @return returns the current index ie. the cursor position
      */
     public int getCursorPosition() {
-        
-        //check if cursor is in a valid position
-        if (this.index < 0 || this.index > this.BackingString.length()) {
-        throw new UnsupportedOperationException("Unimplemented method 'getCursorPosition'");
-        }
         
         return this.index;  
     }
