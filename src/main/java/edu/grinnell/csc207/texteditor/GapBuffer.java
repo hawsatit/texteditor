@@ -29,14 +29,11 @@ public static final int INIT_SIZE = 10;
      *
      */
     public void insert(char ch) {
-
+        
+        expandBuffer();
         backingArray[gapStart] = ch;
         gapStart++;
-        size++;
-        
-        if (gapStart == gapEnd) {
-            expandBuffer();
-        }
+        size++;        
     }
     
     /**
@@ -48,8 +45,10 @@ public static final int INIT_SIZE = 10;
         if (gapStart == 0) {
             throw new UnsupportedOperationException("No character to delete");
         } else {
-            gapStart--;
-            size--;
+            if (gapStart > 0){
+                gapStart--;
+                size--;
+            }
         }
         
     }
@@ -70,10 +69,12 @@ public static final int INIT_SIZE = 10;
          if (gapStart == 0) {
             throw new UnsupportedOperationException("Cursor is at the beginning");
         }
-
-        gapStart--;
-        gapEnd--;
-        backingArray[gapEnd] = backingArray[gapStart];
+        if (gapStart > 0){
+            gapStart--;
+            gapEnd--;
+            backingArray[gapEnd] = backingArray[gapStart];
+        }
+        
     }
 
 
@@ -85,7 +86,7 @@ public static final int INIT_SIZE = 10;
             throw new UnsupportedOperationException("Cursor is at the end");
         }
 
-        if (gapStart < gapEnd) {
+        if (gapEnd < backingArray.length) {
             backingArray[gapStart] = backingArray[gapEnd];
             gapStart++;
             gapEnd++;
@@ -109,8 +110,12 @@ public static final int INIT_SIZE = 10;
     public char getChar(int i) {
         if (i < 0 || i >= this.size) {
             throw new UnsupportedOperationException("Invalid position");
-        } else {
+        }
+        
+        if (i < gapStart) {
             return this.backingArray[i];
+        } else {
+            return this.backingArray[gapEnd + i - gapStart];
         }
     }
     
@@ -118,20 +123,19 @@ public static final int INIT_SIZE = 10;
      * grows the buffer
      */
     private void expandBuffer() {
-        int newSize = backingArray.length * 2;
-        char[] newBuffer = new char[newSize];
-        int afterGapEnd = backingArray.length - gapEnd;
-        int newGapEnd = newSize - afterGapEnd;
+        if (gapStart == gapEnd){
+            int newSize = backingArray.length * 2;
+            char[] newBuffer = new char[newSize];
+            int afterGapEnd = this.size - gapStart;
+            int newGapEnd = newSize - afterGapEnd;
 
-        System.arraycopy(backingArray, 0, newBuffer, 0, gapStart);
+            System.arraycopy(backingArray, 0, newBuffer, 0, gapStart);
 
-       
-        if ((this.size - gapEnd) > 0){
             System.arraycopy(backingArray, gapEnd, newBuffer, newGapEnd, afterGapEnd);
-        }
 
-        gapEnd = newGapEnd;
-        backingArray = newBuffer;
+            gapEnd = newGapEnd;
+            backingArray = newBuffer;
+        }
     }
 
 
@@ -151,4 +155,5 @@ public static final int INIT_SIZE = 10;
 
         return new String(resultArray);
     }
+    
 }
