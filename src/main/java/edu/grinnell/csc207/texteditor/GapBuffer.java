@@ -5,87 +5,75 @@ package edu.grinnell.csc207.texteditor;
  */
 public class GapBuffer {
 
-public static final int INIT_SIZE = 10;
-    
+    public static final int INIT_SIZE = 10;
+
     private char[] backingArray;
     public int gapStart;
     private int gapEnd;
     private int size;
-    
+
     /**
      * initializes GapBuffer
      */
-    public GapBuffer(){
+    public GapBuffer() {
         this.backingArray = new char[INIT_SIZE];
         this.size = 0;
         this.gapStart = 0;
         this.gapEnd = INIT_SIZE;
     }
-    
+
     /**
-     * @param ch 
-     * inserts character ch into the buffer at the gapStart and then increments
-     * gapStart
+     * @param ch inserts character ch into the buffer at the gapStart and then
+     * increments gapStart
      *
      */
     public void insert(char ch) {
-        
+
         expandBuffer();
         backingArray[gapStart] = ch;
         gapStart++;
-        size++;        
-    }
-    
-    /**
-     * deletes the character before the cursor by decrementing gapStart
-     * 
-     */
-    public void delete() {
-        
-        if (gapStart == 0) {
-            throw new UnsupportedOperationException("No character to delete");
-        } else {
-            if (gapStart > 0){
-                gapStart--;
-                size--;
-            }
-        }
-        
+        size++;
     }
 
     /**
-     * 
+     * deletes the character before the cursor by decrementing gapStart
+     *
+     */
+    public void delete() {
+        if (gapStart > 0) {
+            gapStart--;
+            size--;
+        }
+    }
+
+    /**
+     *
      * @return returns the current gapStart ie. the cursor position
      */
     public int getCursorPosition() {
-        return gapStart; 
+        return gapStart;
     }
-    
+
     /**
      * if you can move left, then move the index one to the left
      */
     public void moveLeft() {
-        
-         if (gapStart == 0) {
+
+        if (gapStart == 0) {
             throw new UnsupportedOperationException("Cursor is at the beginning");
         }
-        if (gapStart > 0){
+        if (gapStart > 0) {
             gapStart--;
             gapEnd--;
             backingArray[gapEnd] = backingArray[gapStart];
         }
-        
-    }
 
+    }
 
     /**
      * if you can move right, then move the index one to the right
      */
     public void moveRight() {
-        if (gapEnd == backingArray.length) {
-            throw new UnsupportedOperationException("Cursor is at the end");
-        }
-
         if (gapEnd < backingArray.length) {
             backingArray[gapStart] = backingArray[gapEnd];
             gapStart++;
@@ -94,7 +82,7 @@ public static final int INIT_SIZE = 10;
     }
 
     /**
-     * 
+     *
      * @return the size of the Backing string
      */
     public int getSize() {
@@ -111,19 +99,19 @@ public static final int INIT_SIZE = 10;
         if (i < 0 || i >= this.size) {
             throw new UnsupportedOperationException("Invalid position");
         }
-        
+
         if (i < gapStart) {
             return this.backingArray[i];
         } else {
             return this.backingArray[gapEnd + i - gapStart];
         }
     }
-    
+
     /**
      * grows the buffer
      */
     private void expandBuffer() {
-        if (gapStart == gapEnd){
+        if (gapStart == gapEnd) {
             int newSize = backingArray.length * 2;
             char[] newBuffer = new char[newSize];
             int afterGapEnd = this.size - gapStart;
@@ -138,9 +126,8 @@ public static final int INIT_SIZE = 10;
         }
     }
 
-
     /**
-     * 
+     *
      * @return converts the gapBuffer into an string
      */
     @Override
@@ -155,5 +142,5 @@ public static final int INIT_SIZE = 10;
 
         return new String(resultArray);
     }
-    
+
 }
