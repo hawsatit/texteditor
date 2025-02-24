@@ -58,10 +58,7 @@ public class GapBuffer {
      * if you can move left, then move the index one to the left
      */
     public void moveLeft() {
-
-        if (gapStart == 0) {
-            throw new UnsupportedOperationException("Cursor is at the beginning");
-        }
+        
         if (gapStart > 0) {
             gapStart--;
             gapEnd--;
