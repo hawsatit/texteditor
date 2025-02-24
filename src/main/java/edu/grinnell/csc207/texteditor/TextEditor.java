@@ -6,9 +6,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
 import java.io.IOException;
-import java.nio.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,15 +18,11 @@ public class TextEditor {
 
     public static void drawBuffer(GapBuffer buf, Screen screen) throws IOException {
         screen.clear();
-
-        int row = 0;
-        int col = 0;
         int size = buf.getSize();
 
         for (int i = 0; i < size; i++) {
             char character = buf.getChar(i);
-            screen.setCharacter(col, row, new TextCharacter(character));
-            col++;
+            screen.setCharacter(i, 0, new TextCharacter(character));
         }
 
         screen.setCursorPosition(new TerminalPosition(buf.getCursorPosition(), 0));
@@ -68,30 +62,26 @@ public class TextEditor {
 
         Screen screen = createScreen();
         screen.startScreen();
-        drawBuffer(buf, screen);
 
         boolean isRunning = true;
 
         while (isRunning) {
+            drawBuffer(buf, screen);
             KeyStroke stroke = screen.readInput();
             if (stroke.getKeyType() == KeyType.Character) {
                 buf.insert(stroke.getCharacter());
-                drawBuffer(buf, screen);
             } else if (stroke.getKeyType() == KeyType.ArrowLeft) {
                 if (buf.getCursorPosition() > 0) {
                     buf.moveLeft();
                 }
-                drawBuffer(buf, screen);
             } else if (stroke.getKeyType() == KeyType.ArrowRight) {
                 if (buf.getCursorPosition() < buf.getSize()) {
                     buf.moveRight();
                 }
-                drawBuffer(buf, screen);
             } else if (stroke.getKeyType() == KeyType.Backspace) {
                 if (buf.getSize() > 0) {
                     buf.delete();
                 }
-                drawBuffer(buf, screen);
             } else if (stroke.getKeyType() == KeyType.Escape) {
                 screen.stopScreen();
                 isRunning = false;
