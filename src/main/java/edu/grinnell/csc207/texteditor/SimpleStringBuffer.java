@@ -64,9 +64,7 @@ public class SimpleStringBuffer {
     public void moveLeft() {
         
         //check if cursor is in a valid position and can move left
-        if ((this.index < 0 || this.index > this.BackingString.length()) && (this.index <= 0)) {
-        throw new UnsupportedOperationException("Unimplemented method 'moveLeft'");
-        }else{
+        if (this.index > 0) {
             this.index--;
         }
     }
