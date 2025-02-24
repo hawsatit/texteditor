@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 
 
 public class StringBufferAutoGrader {
-    private GapBuffer makeBufferWith(String s) {
-        GapBuffer buf = new GapBuffer();
+    private SimpleStringBuffer MakeSimpleStringBuffer(String s) {
+        SimpleStringBuffer buf = new SimpleStringBuffer();
         for (int i = 0; i < s.length(); i++) {
             buf.insert(s.charAt(i));
         }
@@ -18,7 +18,7 @@ public class StringBufferAutoGrader {
     @Test
     @DisplayName("Gap: hello end-to-end")
     public void helloExampleTest() {
-        GapBuffer buffer = new GapBuffer();
+        SimpleStringBuffer buffer = new SimpleStringBuffer();
         buffer.insert('h');
         buffer.insert('e');
         buffer.insert('l');
@@ -55,7 +55,7 @@ public class StringBufferAutoGrader {
     @Test
     @DisplayName("Gap: empty")
     public void emptyBufTest() {
-        GapBuffer buf = makeBufferWith("");
+        SimpleStringBuffer buf = MakeSimpleStringBuffer("");
         assertEquals(0, buf.getSize(), "size");
         assertEquals(0, buf.getCursorPosition(), "cursor");
     }
@@ -63,7 +63,7 @@ public class StringBufferAutoGrader {
     @Test
     @DisplayName("Gap: cursor movement")
     public void cursorMovementTest() {
-        GapBuffer buf = makeBufferWith("abc");
+        SimpleStringBuffer buf = MakeSimpleStringBuffer("abc");
         assertEquals(3, buf.getCursorPosition(), "initial cursor");
         buf.moveLeft();
         assertEquals(2, buf.getCursorPosition(), "after L");
@@ -86,7 +86,7 @@ public class StringBufferAutoGrader {
     @Test
     @DisplayName("Gap: insert middle")
     public void cursorInsertMiddleTest() {
-        GapBuffer buf = makeBufferWith("abc");
+        SimpleStringBuffer buf = MakeSimpleStringBuffer("abc");
         buf.moveLeft();
         buf.moveLeft();
         buf.insert('!');
@@ -99,7 +99,7 @@ public class StringBufferAutoGrader {
     @Test
     @DisplayName("Gap: delete middle")
     public void cursorDeleteMiddleTest() {
-        GapBuffer buf = makeBufferWith("abc");
+        SimpleStringBuffer buf = MakeSimpleStringBuffer("abc");
         buf.moveLeft();
         buf.delete();
         buf.delete();
@@ -111,7 +111,7 @@ public class StringBufferAutoGrader {
     @Test
     @DisplayName("Gap: insert front")
     public void cursorInsertFrontTest() {
-        GapBuffer buf = makeBufferWith("abc");
+        SimpleStringBuffer buf = MakeSimpleStringBuffer("abc");
         for (int i = 0; i < 3; i++) {
             buf.moveLeft();
         }
@@ -125,7 +125,7 @@ public class StringBufferAutoGrader {
     @Test
     @DisplayName("Gap: delete front")
     public void cursorDeleteFrontTest() {
-        GapBuffer buf = makeBufferWith("abc");
+        SimpleStringBuffer buf = MakeSimpleStringBuffer("abc");
         for (int i = 0; i < 3; i++) {
             buf.moveLeft();
         }
@@ -138,7 +138,7 @@ public class StringBufferAutoGrader {
     @Test
     @DisplayName("Gap: delete end")
     public void cursorDeleteEndTest() {
-        GapBuffer buf = makeBufferWith("abc");
+        SimpleStringBuffer buf = MakeSimpleStringBuffer("abc");
         buf.delete();
         buf.delete();
         assertEquals(1, buf.getSize(), "size");
@@ -149,7 +149,7 @@ public class StringBufferAutoGrader {
     @Test
     @DisplayName("Gap: big buffer")
     public void bigBufferTest() {
-        GapBuffer buf = new GapBuffer();
+        SimpleStringBuffer buf = new SimpleStringBuffer();
         for (int i = 0; i < 16384; i++) {
             buf.insert((char) (i % 10 + '0'));
         }
