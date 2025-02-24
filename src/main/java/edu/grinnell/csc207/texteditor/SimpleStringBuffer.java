@@ -75,9 +75,7 @@ public class SimpleStringBuffer {
     public void moveRight() {
         
         //check if cursor is in a valid position and can move right
-        if ((this.index < 0 || this.index > this.BackingString.length()) && (this.index >= this.BackingString.length())) {
-        throw new UnsupportedOperationException("Unimplemented method 'moveLeft'");
-        }else{
+        if (this.index < this.BackingString.length()) {
             this.index++;
         }
     }
@@ -88,12 +86,7 @@ public class SimpleStringBuffer {
      */
     public int getSize() {
         
-        //if the Backing String is initialized, return the size
-        if (this.BackingString == null){
-        throw new UnsupportedOperationException("Unimplemented method 'getSize'");
-        }else{
-            return this.BackingString.length();
-        }
+        return this.BackingString.length();
     }
     
     /**
@@ -106,7 +99,7 @@ public class SimpleStringBuffer {
         
         //if i is a valid index in the Backing String, return the character at the positon i
         if (i < 0 || i >= this.BackingString.length()){
-        throw new UnsupportedOperationException("Unimplemented method 'getChar'");
+        throw new UnsupportedOperationException("Invalid Index");
         }else{
             return this.BackingString.charAt(i);
         }
@@ -118,7 +111,7 @@ public class SimpleStringBuffer {
     @Override
     public String toString() {
         if (this.BackingString == null) {
-        throw new UnsupportedOperationException("Unimplemented method 'toString'");
+        throw new UnsupportedOperationException("String is Empty");
         }
         return this.BackingString;
         
