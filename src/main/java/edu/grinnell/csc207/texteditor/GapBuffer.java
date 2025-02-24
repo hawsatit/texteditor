@@ -7,8 +7,8 @@ public class GapBuffer {
 
 public static final int INIT_SIZE = 10;
     
-    private char[] BackingArray;
-    private int gapStart;
+    private char[] backingArray;
+    public int gapStart;
     private int gapEnd;
     private int size;
     
@@ -16,7 +16,7 @@ public static final int INIT_SIZE = 10;
      * initializes GapBuffer
      */
     public GapBuffer(){
-        this.BackingArray = new char[INIT_SIZE];
+        this.backingArray = new char[INIT_SIZE];
         this.size = 0;
         this.gapStart = 0;
         this.gapEnd = INIT_SIZE;
@@ -29,14 +29,14 @@ public static final int INIT_SIZE = 10;
      *
      */
     public void insert(char ch) {
+
+        backingArray[gapStart] = ch;
+        gapStart++;
+        size++;
         
         if (gapStart == gapEnd) {
             expandBuffer();
         }
-        
-        BackingArray[gapStart] = ch;
-        gapStart++;
-        size++;
     }
     
     /**
@@ -49,7 +49,6 @@ public static final int INIT_SIZE = 10;
             throw new UnsupportedOperationException("No character to delete");
         } else {
             gapStart--;
-            BackingArray[gapStart] = '\0';
             size--;
         }
         
@@ -72,23 +71,25 @@ public static final int INIT_SIZE = 10;
             throw new UnsupportedOperationException("Cursor is at the beginning");
         }
 
-        BackingArray[gapEnd - 1] = BackingArray[gapStart - 1];
         gapStart--;
         gapEnd--;
+        backingArray[gapEnd] = backingArray[gapStart];
     }
+
 
     /**
      * if you can move right, then move the index one to the right
      */
     public void moveRight() {
-        
-        if (gapEnd == BackingArray.length) {
+        if (gapEnd == backingArray.length) {
             throw new UnsupportedOperationException("Cursor is at the end");
         }
 
-        BackingArray[gapStart] = BackingArray[gapEnd];
-        gapStart++;
-        gapEnd++;
+        if (gapStart < gapEnd) {
+            backingArray[gapStart] = backingArray[gapEnd];
+            gapStart++;
+            gapEnd++;
+        }
     }
 
     /**
@@ -106,41 +107,47 @@ public static final int INIT_SIZE = 10;
      * @return the character at position i
      */
     public char getChar(int i) {
-        //if i is a valid index in the Backing String, return the character at the positon i
-        if (i < 0 || i >= this.size){
-        throw new UnsupportedOperationException("i is an invalid position");
+        if (i < 0 || i >= this.size) {
+            throw new UnsupportedOperationException("Invalid position");
         } else {
-            return this.BackingArray[i];
+            return this.backingArray[i];
         }
     }
     
+    /**
+     * grows the buffer
+     */
     private void expandBuffer() {
-        int newSize = BackingArray.length * 2;
+        int newSize = backingArray.length * 2;
         char[] newBuffer = new char[newSize];
-        int newGapEnd = newSize - (BackingArray.length - gapEnd);
+        int afterGapEnd = backingArray.length - gapEnd;
+        int newGapEnd = newSize - afterGapEnd;
 
-        System.arraycopy(BackingArray, 0, newBuffer, 0, gapStart);
+        System.arraycopy(backingArray, 0, newBuffer, 0, gapStart);
 
-        System.arraycopy(BackingArray, gapEnd, newBuffer, newGapEnd, BackingArray.length - gapEnd);
+       
+        if ((this.size - gapEnd) > 0){
+            System.arraycopy(backingArray, gapEnd, newBuffer, newGapEnd, afterGapEnd);
+        }
 
         gapEnd = newGapEnd;
-        BackingArray = newBuffer;
+        backingArray = newBuffer;
     }
 
+
+    /**
+     * 
+     * @return converts the gapBuffer into an string
+     */
     @Override
     public String toString() {
         char[] resultArray = new char[size];
-        int index = 0;
 
-        // Copy before the gap
-        for (int i = 0; i < gapStart; i++) {
-            resultArray[index++] = BackingArray[i];
-        }
+        // Copy characters before the gap
+        System.arraycopy(backingArray, 0, resultArray, 0, gapStart);
 
-        // Copy after the gap
-        for (int i = gapEnd; i < BackingArray.length; i++) {
-            resultArray[index++] = BackingArray[i];
-        }
+        // Copy characters after the gap
+        System.arraycopy(backingArray, gapEnd, resultArray, gapStart, size - gapStart);
 
         return new String(resultArray);
     }
