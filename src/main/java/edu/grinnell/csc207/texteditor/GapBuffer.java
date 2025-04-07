@@ -58,7 +58,7 @@ public class GapBuffer {
      * if you can move left, then move the index one to the left
      */
     public void moveLeft() {
-        
+
         if (gapStart > 0) {
             gapStart--;
             gapEnd--;
