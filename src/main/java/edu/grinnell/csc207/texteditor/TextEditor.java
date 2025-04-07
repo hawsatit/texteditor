@@ -17,11 +17,12 @@ import java.nio.file.Paths;
 public class TextEditor {
     
     /**
-     * 
+    * Draws the current content of the GapBuffer to the terminal screen.
+    *
     * @param buf    the GapBuffer to display
     * @param screen the Lanterna screen to draw to
     * @throws IOException
-     */
+    */
     public static void drawBuffer(GapBuffer buf, Screen screen) throws IOException {
         screen.clear();
         int size = buf.getSize();
