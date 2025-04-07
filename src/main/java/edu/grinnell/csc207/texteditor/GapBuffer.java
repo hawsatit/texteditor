@@ -13,7 +13,7 @@ public class GapBuffer {
     private int size;
 
     /**
-     * initializes GapBuffer
+     * Initializes a new GapBuffer instance.
      */
     public GapBuffer() {
         this.backingArray = new char[INIT_SIZE];
@@ -23,12 +23,12 @@ public class GapBuffer {
     }
 
     /**
-     * @param ch inserts character ch into the buffer at the gapStart and then
-     * increments gapStart
+     * Inserts character ch into the buffer at the gapStart and then
+     * increments gapStart.
      *
+     * @param ch the character to insert
      */
     public void insert(char ch) {
-
         expandBuffer();
         backingArray[gapStart] = ch;
         gapStart++;
@@ -36,8 +36,7 @@ public class GapBuffer {
     }
 
     /**
-     * deletes the character before the cursor by decrementing gapStart
-     *
+     * Deletes the character before the cursor by decrementing gapStart.
      */
     public void delete() {
         if (gapStart > 0) {
@@ -47,28 +46,27 @@ public class GapBuffer {
     }
 
     /**
+     * Returns the current gapStart, i.e., the cursor position.
      *
-     * @return returns the current gapStart ie. the cursor position
+     * @return the current cursor position
      */
     public int getCursorPosition() {
         return gapStart;
     }
 
     /**
-     * if you can move left, then move the index one to the left
+     * Moves the cursor one position to the left if possible.
      */
     public void moveLeft() {
-
         if (gapStart > 0) {
             gapStart--;
             gapEnd--;
             backingArray[gapEnd] = backingArray[gapStart];
         }
-
     }
 
     /**
-     * if you can move right, then move the index one to the right
+     * Moves the cursor one position to the right if possible.
      */
     public void moveRight() {
         if (gapEnd < backingArray.length) {
@@ -79,8 +77,9 @@ public class GapBuffer {
     }
 
     /**
+     * Returns the current number of characters in the buffer.
      *
-     * @return the size of the Backing string
+     * @return the size of the buffer
      */
     public int getSize() {
         return this.size;
@@ -91,6 +90,7 @@ public class GapBuffer {
      *
      * @param i the index of the character
      * @return the character at position i
+     * @throws UnsupportedOperationException if the index is invalid
      */
     public char getChar(int i) {
         if (i < 0 || i >= this.size) {
@@ -105,7 +105,7 @@ public class GapBuffer {
     }
 
     /**
-     * grows the buffer
+     * Grows the buffer when the gap is full.
      */
     private void expandBuffer() {
         if (gapStart == gapEnd) {
@@ -115,7 +115,6 @@ public class GapBuffer {
             int newGapEnd = newSize - afterGapEnd;
 
             System.arraycopy(backingArray, 0, newBuffer, 0, gapStart);
-
             System.arraycopy(backingArray, gapEnd, newBuffer, newGapEnd, afterGapEnd);
 
             gapEnd = newGapEnd;
@@ -124,8 +123,9 @@ public class GapBuffer {
     }
 
     /**
+     * Converts the gap buffer into a String.
      *
-     * @return converts the gapBuffer into an string
+     * @return the contents of the buffer as a string
      */
     @Override
     public String toString() {
@@ -139,5 +139,4 @@ public class GapBuffer {
 
         return new String(resultArray);
     }
-
 }
