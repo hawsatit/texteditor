@@ -2,6 +2,32 @@
 
 **Author**: Tanadanai Hawsatitam
 
+## Resubmission Edits:
+
+Fixed Style Error
+
+Made Sure the code runs properlly
+
+Analysis of insert method
+
+## Analysis of String buffer insert method
+
+Relevant Inputs: Size of current buffer and Cursor position
+
+Critical Operations: Copying part of the original string, adding the new
+character, and then appending it to the remaining part of the original string.
+
+Mathmatical model: Copying the left: O(i), Copying the right: O(n - i), Adding a character in between: O(1),
+Adding the parts for the final string: O(n)
+
+Big-O:  insert is O(n)
+
+For insert you need to create a new array each time you insert because they are immutable.
+We split the original string into the part that is before and after the new character. We copy
+those into a new array, and then when we create the final array, we add the first part, the new character,
+and then the second part. These operations require traversing the existing string to build a new one, 
+so the runtime scales linearly with the length of the current buffer. 
+
 ## Resources Used
 
 + Apache Netbeans
