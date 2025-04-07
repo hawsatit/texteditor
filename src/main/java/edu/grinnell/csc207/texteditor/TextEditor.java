@@ -15,7 +15,13 @@ import java.nio.file.Paths;
  * The driver for the TextEditor Application.
  */
 public class TextEditor {
-
+    
+    /**
+     * 
+    * @param buf    the GapBuffer to display
+    * @param screen the Lanterna screen to draw to
+    * @throws IOException
+     */
     public static void drawBuffer(GapBuffer buf, Screen screen) throws IOException {
         screen.clear();
         int size = buf.getSize();
@@ -28,7 +34,13 @@ public class TextEditor {
         screen.setCursorPosition(new TerminalPosition(buf.getCursorPosition(), 0));
         screen.refresh();
     }
-
+    
+    /**
+     * Creates and returns a new Lanterna screen.
+     *
+     * @return a new initialized Screen object
+     * @throws IOException
+     */
     public static Screen createScreen() throws IOException {
         Screen screen = new DefaultTerminalFactory().createScreen();
         return screen;
