@@ -5,86 +5,80 @@ package edu.grinnell.csc207.texteditor;
  */
 public class SimpleStringBuffer {
 
-    private String BackingString;
+    private String backingString;
     private int index;
 
+    /**
+     * Initializes an empty buffer with cursor at position 0.
+     */
     public SimpleStringBuffer() {
-        this.BackingString = "";
+        this.backingString = "";
         this.index = 0;
     }
 
     /**
+     * Inserts character ch into the buffer at the cursor's current position,
+     * advancing the cursor one position forward.
      *
-     * @param ch inserts character ch into the buffer at the cursor's current
-     * position, advancing the cursor one position forward
+     * @param ch the character to insert
      */
     public void insert(char ch) {
-
-        //checks if the index is in a possible position
-        if (this.index < 0 || this.index > this.BackingString.length()) {
+        if (index < 0 || index > backingString.length()) {
             throw new UnsupportedOperationException("Insertion index is out of bounds");
         }
-
-        String firstPart = this.BackingString.substring(0, this.index);
-        String secondPart = this.BackingString.substring(this.index);
-        this.BackingString = firstPart + ch + secondPart;
-        this.index++;
-
+        String firstPart = backingString.substring(0, index);
+        String secondPart = backingString.substring(index);
+        backingString = firstPart + ch + secondPart;
+        index++;
     }
 
     /**
-     * deletes the character at the cursor's current position, moving the cursor
-     * one position backwards. Does nothing if there are no characters in the
-     * buffer.
-     *
+     * Deletes the character before the cursor, moving the cursor one position backwards.
+     * Does nothing if there are no characters before the cursor.
      */
     public void delete() {
-        if (this.index > 0 && this.BackingString.length() > 0) {
-            String firstPart = this.BackingString.substring(0, this.index - 1);
-            String secondPart = this.BackingString.substring(this.index);
-            this.BackingString = firstPart + secondPart;
-            this.index--;
+        if (index > 0 && backingString.length() > 0) {
+            String firstPart = backingString.substring(0, index - 1);
+            String secondPart = backingString.substring(index);
+            backingString = firstPart + secondPart;
+            index--;
         }
     }
 
     /**
+     * Returns the current cursor position.
      *
-     * @return returns the current index ie. the cursor position
+     * @return the cursor position
      */
     public int getCursorPosition() {
-
-        return this.index;
+        return index;
     }
 
     /**
-     * if you can move left, then move the index one to the left
+     * Moves the cursor one position to the left if possible.
      */
     public void moveLeft() {
-
-        //check if cursor is in a valid position and can move left
-        if (this.index > 0) {
-            this.index--;
+        if (index > 0) {
+            index--;
         }
     }
 
     /**
-     * if you can move right, then move the index one to the right
+     * Moves the cursor one position to the right if possible.
      */
     public void moveRight() {
-
-        //check if cursor is in a valid position and can move right
-        if (this.index < this.BackingString.length()) {
-            this.index++;
+        if (index < backingString.length()) {
+            index++;
         }
     }
 
     /**
+     * Returns the number of characters in the buffer.
      *
-     * @return the size of the Backing string if it is initialized
+     * @return the size of the buffer
      */
     public int getSize() {
-
-        return this.BackingString.length();
+        return backingString.length();
     }
 
     /**
@@ -92,26 +86,22 @@ public class SimpleStringBuffer {
      *
      * @param i the index of the character
      * @return the character at position i
+     * @throws UnsupportedOperationException if the index is invalid
      */
     public char getChar(int i) {
-
-        //if i is a valid index in the Backing String, return the character at the positon i
-        if (i < 0 || i >= this.BackingString.length()) {
-            throw new UnsupportedOperationException("Invalid Index");
-        } else {
-            return this.BackingString.charAt(i);
+        if (i < 0 || i >= backingString.length()) {
+            throw new UnsupportedOperationException("Invalid index");
         }
+        return backingString.charAt(i);
     }
 
     /**
-     * Returns the full backing string.
+     * Returns the contents of the buffer as a string.
+     *
+     * @return the buffer as a string
      */
     @Override
     public String toString() {
-        if (this.BackingString == null) {
-            throw new UnsupportedOperationException("String is Empty");
-        }
-        return this.BackingString;
-
+        return backingString;
     }
 }
